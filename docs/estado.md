@@ -94,9 +94,12 @@
   silenciosa → arranque → conexión con ChatGPT en 13 s → desinstalación limpia (datos de usuario conservados).
   Huella de voz y `--run-script` verificados dentro del ejecutable.
 
+- 2026-11-22 — **Release v0.1.0 publicado**: https://github.com/PauloCiudad/ROBIN-Asistente-Virtual/releases/tag/v0.1.0
+  (repo público; asset `ROBIN-Setup-0.1.0.exe`). Publicación con GitHub CLI (`gh release create`).
+
 ## En curso
 
-- Publicar el release v0.1.0 en GitHub (requiere `gh auth login` del usuario).
+- Nada en curso.
 
 ## Próximos pasos
 
