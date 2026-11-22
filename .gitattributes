@@ -1,0 +1,5 @@
+# Normaliza finales de línea (LF en el repo, CRLF/LF según el sistema al hacer checkout)
+* text=auto
+*.png binary
+*.wav binary
+*.onnx binary

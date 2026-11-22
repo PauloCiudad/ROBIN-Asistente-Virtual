@@ -1,0 +1,45 @@
+# --- Entorno Python ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# --- Secretos y credenciales (nunca al repo) ---
+.env
+.env.*
+*.pem
+*.key
+auth.json
+credentials*.json
+token*.json
+
+# --- Datos locales de ROBIN ---
+# Viven en %APPDATA%\ROBIN y Documentos\ROBIN; se listan por si alguien los copia al proyecto.
+codex/
+logs/
+*.log
+models/
+voice/
+recordings/
+activity.db
+settings.json
+patterns_state.json
+automatizaciones/
+*.wav
+*.mp3
+*.onnx
+
+# --- Sistema y herramientas ---
+.claude/settings.local.json
+.idea/
+.vscode/
+Thumbs.db
+desktop.ini
