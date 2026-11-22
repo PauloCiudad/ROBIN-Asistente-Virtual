@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import ctypes
 import logging
+import time
 
-from PySide6.QtCore import QMetaObject, QObject, QThread, Qt, Signal
+from PySide6.QtCore import QMetaObject, QObject, QThread, Qt, QTimer, Signal
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
 
@@ -63,6 +64,7 @@ class RobinController(QObject):
         self._start_ai()
         self._start_onboarding()
         self._start_learning()
+        self._start_auto_hide()
 
         if self.hotkey.registered:
             hello = "Di “Oye Robin” o pulsa Alt + X" if self.settings.wake_word_enabled else "Pulsa Alt + X"
@@ -347,6 +349,43 @@ class RobinController(QObject):
         self.automations.reset_suggestions()
         self._refresh_learning_info()
         self.tray.showMessage(APP_NAME, "Borré todo lo que había aprendido de tu actividad.", robin_icon(), 4000)
+
+    # --- ocultarse sola al terminar de responder -----------------------------------
+
+    def _start_auto_hide(self) -> None:
+        self._is_speaking = False
+        self._autohide_since = 0.0
+        self._autohide_min = 0.0
+        self._autohide_timer = QTimer(self)
+        self._autohide_timer.setInterval(500)
+        self._autohide_timer.timeout.connect(self._autohide_tick)
+        self.tts.speaking_changed.connect(lambda speaking: setattr(self, "_is_speaking", speaking))
+        self.ai.reply_finished.connect(self._schedule_auto_hide)
+        # Cualquier nueva interacción cancela el cierre pendiente.
+        for signal in (self.ai.reply_started, self.ai.reply_failed, self.window.mic_requested,
+                       self.confirmer.requested, self.window.hidden):
+            signal.connect(self._autohide_timer.stop)
+
+    def _schedule_auto_hide(self, text: str) -> None:
+        if not self.settings.auto_hide:
+            return
+        if self.settings.voice_enabled:
+            self._autohide_min = 1.5  # tras terminar de hablar
+        else:
+            self._autohide_min = min(12.0, max(4.0, len(text) / 15))  # tiempo para leer
+        self._autohide_since = time.monotonic()
+        self._autohide_timer.start()
+
+    def _autohide_tick(self) -> None:
+        now = time.monotonic()
+        if self._is_speaking or self.window.user_engaged():
+            self._autohide_since = now  # espera a que termine de hablar o a que el usuario deje de interactuar
+            return
+        if now - self._autohide_since < self._autohide_min:
+            return
+        self._autohide_timer.stop()
+        if self.window.isVisible() and not self.window.blocks_auto_hide() and not self.confirmer.pending:
+            self.window.dismiss()
 
     def _on_setting_changed(self, key: str, value: bool) -> None:
         setattr(self.settings, key, value)

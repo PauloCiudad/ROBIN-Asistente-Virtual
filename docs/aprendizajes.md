@@ -69,6 +69,21 @@ PowerShell 5.1 devuelve texto en la página de códigos OEM: anteponer
   sesión ONNX directamente conservando `h`, `c` y los 64 samples de contexto.
 - `WhisperModel(..., local_files_only=True)` evita consultar HuggingFace en cada arranque.
 
+### 2026-11-22 — Empaquetado con PyInstaller
+- `codex-code-mode-host.exe` y `codex-exec-server.exe` (del paquete `codex_cli_bin`) **son necesarios**:
+  sin ellos, las herramientas propias (`find_files`…) y las apps conectadas fallan ("la herramienta no está
+  disponible"), aunque el chat funcione.
+- La SDK localiza codex.exe con `Path(codex_cli_bin.__file__).parent / "bin"`: basta copiar el paquete como
+  datos en la misma ruta relativa dentro de `_internal`.
+- En una app sin consola (`console=False`), `print()` no falla (no hace nada): las automatizaciones se pueden
+  ejecutar con el propio ejecutable (`--run-script`).
+- Verificación útil: `ROBIN.exe --run-script prueba.py` permite ejecutar diagnósticos dentro del entorno
+  empaquetado (así se comprobó que la huella de voz da los mismos valores que en desarrollo).
+
+### 2026-11-22 — "Oye Robin" en uso real
+- Puntuaciones de verificación de la voz del usuario en vivo ≈0,55 (muestras de entrenamiento 0,82–0,89):
+  el micrófono en vivo baja la similitud. Una voz ajena dio 0,01 (rechazada). Vigilar falsos rechazos.
+
 ### 2026-11-22 — Permisos de escritura de las apps conectadas
 - Con `approval_policy="never"`, Codex rechaza en silencio las escrituras de apps ("esta sesión no permite
   aprobaciones"): no llega ninguna petición al cliente.

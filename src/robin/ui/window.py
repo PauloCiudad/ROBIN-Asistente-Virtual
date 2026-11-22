@@ -32,6 +32,7 @@ ICON_VOLUME, ICON_MUTE, ICON_MIC = "", "", ""
 SETTINGS_SECTIONS: list[tuple[str, list[tuple[str, str, str, bool]]]] = [
     ("General", [
         ("start_with_windows", "Iniciar con Windows", "ROBIN se queda en la bandeja al encender el PC.", True),
+        ("auto_hide", "Ocultar al terminar de responder", "Cuando ROBIN acaba de hablar, vuelve sola a la bandeja.", True),
     ]),
     ("Voz", [
         ("voice_enabled", "Voz de ROBIN", "Lee las respuestas en voz alta, con acento peruano.", True),
@@ -278,11 +279,19 @@ class RobinWindow(QWidget):
         input_row.addWidget(self._input, 1)
         input_row.addWidget(self._btn_send)
         lay.addLayout(input_row)
-        hint = QLabel("Di “Oye Robin” o pulsa Alt + X · Esc para ocultar")
-        hint.setObjectName("hint")
-        hint.setAlignment(Qt.AlignCenter)
-        lay.addWidget(hint)
+        self._hint = QLabel()
+        self._hint.setObjectName("hint")
+        self._hint.setAlignment(Qt.AlignCenter)
+        self._hint.setWordWrap(True)
+        lay.addWidget(self._hint)
+        self.update_hint(self._settings.wake_word_enabled)
         return page
+
+    def update_hint(self, wake_enabled: bool) -> None:
+        if wake_enabled:
+            self._hint.setText("Di “Oye Robin” o pulsa Alt + X · Esc para ocultar")
+        else:
+            self._hint.setText("Pulsa Alt + X · “Oye Robin” está desactivado en Ajustes · Esc para ocultar")
 
     def _build_confirm_card(self) -> QWidget:
         card = QFrame()
@@ -360,6 +369,16 @@ class RobinWindow(QWidget):
         self._automation_info.setText(
             f"{count} automatización(es) creada(s) · {events} evento(s) aprendido(s) en tu PC."
         )
+
+    def blocks_auto_hide(self) -> bool:
+        """Situaciones en las que no tiene sentido ocultarse sola (el usuario debe decidir algo)."""
+        return (self.onboarding_active or self._confirming or self._listening or self._transcribing
+                or self._suggest_card.isVisible() or self._stack.currentWidget() is not self._assistant_page
+                or self._reply.objectName() == "replyError")
+
+    def user_engaged(self) -> bool:
+        """El usuario está interactuando: ratón encima o escribiendo algo."""
+        return self.underMouse() or bool(self._input.text().strip())
 
     def show_confirmation(self, text: str) -> None:
         self._confirming = True
@@ -521,6 +540,8 @@ class RobinWindow(QWidget):
     def _on_switch(self, key: str, value: bool) -> None:
         if key == "voice_enabled":
             self._update_voice_button(value)
+        elif key == "wake_word_enabled":
+            self.update_hint(value)
         self.setting_changed.emit(key, value)
 
     def _update_voice_button(self, enabled: bool) -> None:

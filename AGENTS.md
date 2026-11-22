@@ -45,4 +45,5 @@ Python 3.12 + PySide6, gestionado con `uv` (ver `docs/decisiones.md`).
 uv sync          # instalar dependencias
 uv run robin     # ejecutar ROBIN (bandeja del sistema; Alt + X abre la ventana)
 uv run pytest    # tests
+powershell -ExecutionPolicy Bypass -File packaging\build.ps1   # ejecutable + instalador (requiere Inno Setup 6)
 ```

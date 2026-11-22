@@ -60,6 +60,7 @@ class Settings:
     onboarding_done: bool = False
     # General
     start_with_windows: bool = False
+    auto_hide: bool = True  # ocultar al tray cuando ROBIN termina de responder
     # Voz (Fase 2)
     voice_enabled: bool = True
     wake_word_enabled: bool = True

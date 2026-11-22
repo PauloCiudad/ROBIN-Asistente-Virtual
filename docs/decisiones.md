@@ -60,6 +60,24 @@ Formato de cada entrada:
 - Consecuencias: (+) voz natural, gratis, sin API key. (−) requiere internet; usa un endpoint no documentado
   de Microsoft que podría cambiar → aislar tras interfaz `TextToSpeech`.
 
+## ADR-011 — Distribución: PyInstaller (carpeta) + instalador Inno Setup
+
+- Fecha: 2026-11-22
+- Estado: Aceptada
+- Decisión:
+  - `packaging/robin.spec` (PyInstaller, modo carpeta, sin consola, icono generado por `make_icon.py`).
+    Incluye con `collect_all` openai_codex, faster_whisper, ctranslate2, onnxruntime, sherpa_onnx, edge_tts,
+    sounddevice, certifi, tokenizers y av; metadatos de los paquetes que la SDK de Codex valida; y **todo**
+    `codex_cli_bin` (codex.exe + `codex-code-mode-host.exe` + `codex-exec-server.exe` + recursos).
+  - `packaging/robin.iss` (Inno Setup 6): instala por usuario en `%LOCALAPPDATA%\Programs\ROBIN` sin
+    permisos de administrador, en español; menú Inicio, icono de escritorio opcional, tarea "Iniciar con
+    Windows" (mismo valor `HKCU\...\Run\ROBIN` que el ajuste de la app); cierra ROBIN y sus procesos hijos
+    (`taskkill /T`) antes de actualizar/desinstalar. Los datos del usuario (`%APPDATA%\ROBIN`) se conservan.
+  - `packaging/build.ps1`: tests → icono → PyInstaller → instalador → SHA256.
+  - En la versión instalada no hay Python: las automatizaciones se ejecutan con `ROBIN.exe --run-script`.
+- Consecuencias: (+) instalación de un clic, actualizaciones encima. (−) Tamaño grande (~950 MB instalado;
+  codex.exe solo ocupa ~390 MB). Sin firma de código: Windows SmartScreen mostrará un aviso.
+
 ## ADR-010 — Fase 3: aprendizaje de rutinas y automatizaciones en Python
 
 - Fecha: 2026-11-22

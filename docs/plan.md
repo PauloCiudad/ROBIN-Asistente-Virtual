@@ -51,5 +51,7 @@
 
 ## Fase 5 — Distribución
 
-- [ ] Empaquetado como ejecutable/instalador para Windows.
-- [ ] Actualizaciones.
+- [x] Empaquetado como ejecutable (PyInstaller) + instalador (Inno Setup) — `packaging/build.ps1` (ADR-011).
+- [x] Primer release v0.1.0 en GitHub.
+- [ ] Firma de código (evitar el aviso de SmartScreen).
+- [ ] Actualizaciones automáticas (comprobar releases de GitHub).

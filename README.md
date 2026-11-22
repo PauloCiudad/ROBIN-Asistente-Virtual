@@ -15,6 +15,13 @@ Gmail…) pidiendo permiso antes de cambiar nada, y aprende tus rutinas para cre
 - Detección de rutinas repetidas → scripts `.py` revisables en `Documentos\ROBIN\automatizaciones`.
 - Ajustes con un switch por cada permiso; todo lo aprendido se queda en tu PC.
 
+## Instalación
+
+1. Descarga `ROBIN-Setup-<versión>.exe` desde [Releases](https://github.com/PauloCiudad/ROBIN-Asistente-Virtual/releases).
+2. Ejecútalo (no pide permisos de administrador). Como el instalador aún no está firmado, Windows
+   SmartScreen puede avisar: «Más información» → «Ejecutar de todas formas».
+3. ROBIN aparece en la bandeja. Inicia sesión con ChatGPT y sigue la configuración inicial.
+
 ## Requisitos
 
 - Windows 10/11, micrófono.
@@ -27,6 +34,7 @@ Gmail…) pidiendo permiso antes de cambiar nada, y aprende tus rutinas para cre
 uv sync          # instala dependencias
 uv run robin     # inicia ROBIN en la bandeja del sistema
 uv run pytest    # tests
+powershell -ExecutionPolicy Bypass -File packaging\build.ps1   # genera el instalador (Inno Setup 6)
 ```
 
 La primera vez se abre el navegador para iniciar sesión en ChatGPT y se descargan los modelos de voz

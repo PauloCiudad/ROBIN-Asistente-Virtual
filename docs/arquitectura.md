@@ -102,4 +102,13 @@ Botón Detener / Cancelar ──(directo)──────►  interrupt() / ca
 
 ```
 tests/                    pytest (`uv run pytest`)
+packaging/
+  robin.spec              PyInstaller (modo carpeta) → build\dist\ROBIN\ROBIN.exe
+  robin.iss               Inno Setup → build\installer\ROBIN-Setup-<versión>.exe
+  make_icon.py            genera robin.ico desde el icono dibujado por la app
+  build.ps1               tests → icono → PyInstaller → instalador → SHA256
 ```
+
+- Ocultarse sola: `reply_finished` → temporizador (500 ms) que espera a que termine la voz (+1,5 s) o un
+  tiempo de lectura si la voz está apagada; no se oculta si hay permiso pendiente, sugerencia, ajustes,
+  error, escucha activa, ratón encima o texto escrito (`auto_hide`, `blocks_auto_hide`, `user_engaged`).

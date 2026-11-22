@@ -175,10 +175,15 @@ class AutomationStore:
             self._save(items)
 
     def run(self, automation: Automation, dry_run: bool = False) -> subprocess.Popen:
-        python = Path(sys.executable)
-        pythonw = python.with_name("pythonw.exe")
-        exe = str(pythonw if pythonw.exists() and not dry_run else python)
-        args = [exe, str(self.folder / automation.file)] + (["--dry-run"] if dry_run else [])
+        script = str(self.folder / automation.file)
+        extra = ["--dry-run"] if dry_run else []
+        if getattr(sys, "frozen", False):  # versión instalada: ROBIN.exe hace de intérprete
+            args = [sys.executable, "--run-script", script, *extra]
+        else:
+            python = Path(sys.executable)
+            pythonw = python.with_name("pythonw.exe")
+            exe = str(pythonw if pythonw.exists() and not dry_run else python)
+            args = [exe, script, *extra]
         env = dict(os.environ, PYTHONIOENCODING="utf-8")
         if dry_run:
             return subprocess.Popen(args, cwd=self.folder, creationflags=_CREATE_NO_WINDOW, env=env,

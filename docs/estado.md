@@ -86,9 +86,17 @@
 - 2026-11-22 — Primer commit (`3727b4e`) subido a GitHub: https://github.com/PauloCiudad/ROBIN-Asistente-Virtual
   (rama `main`). Añadidos `README.md` en la raíz, `.gitignore` completo y `.gitattributes`.
 
+- 2026-11-22 — "Oye Robin" no respondía: el switch estaba apagado desde el 2026-11-21. Reactivado; la ayuda
+  de la ventana ahora indica si está desactivado. Verificación de voz en vivo: 0,55 (aceptada).
+- 2026-11-22 — **Ocultarse al terminar de responder** (switch `auto_hide`, activado por defecto).
+- 2026-11-22 — **Instalador v0.1.0** (ADR-011): `build\installer\ROBIN-Setup-0.1.0.exe`, 211 MB,
+  SHA256 `CF7C91DD5DCFE3E5911F0652FC71062F326034C680A21F9699FB8F1750BF8109`. Probado: instalación
+  silenciosa → arranque → conexión con ChatGPT en 13 s → desinstalación limpia (datos de usuario conservados).
+  Huella de voz y `--run-script` verificados dentro del ejecutable.
+
 ## En curso
 
-- Nada en curso.
+- Publicar el release v0.1.0 en GitHub (requiere `gh auth login` del usuario).
 
 ## Próximos pasos
 
