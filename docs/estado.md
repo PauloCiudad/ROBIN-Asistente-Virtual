@@ -83,6 +83,9 @@
     aprobación de la primera ejecución. Total 55 tests.
   - Los switches "Apps que uso" y "Archivos que abro" siguen **apagados** (por defecto): el usuario decide.
 
+- 2026-11-22 — Primer commit (`3727b4e`) subido a GitHub: https://github.com/PauloCiudad/ROBIN-Asistente-Virtual
+  (rama `main`). Añadidos `README.md` en la raíz, `.gitignore` completo y `.gitattributes`.
+
 ## En curso
 
 - Nada en curso.
